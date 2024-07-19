@@ -11,6 +11,6 @@ public class GridResult
 
 public class ResultListDTO<T>
 {
-    public required List<T> List { get; set; }
+    public required IQueryable<T> List { get; set; }
     public required GridResult ResultPaging { get; set; }
 }

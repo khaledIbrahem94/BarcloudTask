@@ -2,7 +2,7 @@
 {
     public static class CorsService
     {
-        public static IHostApplicationBuilder AddCrosService(this IHostApplicationBuilder builder)
+        public static IHostApplicationBuilder AddCorsService(this IHostApplicationBuilder builder)
         {
             builder.Services.AddCors(options =>
             {

@@ -1,9 +1,11 @@
 ﻿using BarcloudTask.Core;
+using BarcloudTask.DataBase.Models;
 using BarcloudTask.Service.Interface;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace BarcloudTask.Service.Implementation;
 
-public class CommonService : ICommonService
+public class CommonService(IServiceProvider _serviceProvider) : ICommonService
 {
     public SaveAction Fail(string Msg = "Fail")
     {
@@ -14,7 +16,7 @@ public class CommonService : ICommonService
         };
     }
 
-    public ResultListDTO<T> ResultList<T>(int Total, List<T> List, GridParamters GridParamters)
+    public ResultListDTO<T> ResultList<T>(int Total, IQueryable<T> List, GridParamters GridParamters)
     {
         return new ResultListDTO<T>
         {
@@ -22,16 +24,11 @@ public class CommonService : ICommonService
             List = List,
             ResultPaging = new GridResult
             {
-                PageRows = List.Count,
+                PageRows = List.Count(),
                 TotalRows = Total,
                 NumberOfPages = Total / GridParamters.RowsNumber,
             }
         };
-    }
-
-    public ResultListDTO<T> ResultList<T>(List<T> List)
-    {
-        throw new NotImplementedException();
     }
 
     public SaveAction Success(string Msg = "Done")
@@ -41,5 +38,13 @@ public class CommonService : ICommonService
             Success = true,
             Message = Msg
         };
+    }
+    public async Task AddError(ErrorsLog error)
+    {
+        using (var scope = _serviceProvider.CreateScope())
+        {
+            var repoErrorLog = scope.ServiceProvider.GetRequiredService<IRepository<ErrorsLog>>();
+            await repoErrorLog.InsertAsync(error);
+        }
     }
 }

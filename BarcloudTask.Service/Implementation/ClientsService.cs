@@ -3,15 +3,23 @@ using BarcloudTask.Core;
 using BarcloudTask.DataBase.Models;
 using BarcloudTask.DTO.DTOs;
 using BarcloudTask.Service.Interface;
+using System.Linq.Expressions;
 
 namespace BarcloudTask.Service.Implementation;
 
-public class ClientsService(IRepository<Client> _repository, IMapper _mapper) : IClientsService
+public class ClientsService(IRepository<Client> _repository, ICommonService _commonService, IMapper _mapper) : IClientsService
 {
 
-    public async Task<IEnumerable<Client>> GetAllAsync()
+    public async Task<ResultListDTO<Client>> GetAllAsync(GridParamters gridParamters)
     {
-        return await _repository.GetAllAsync();
+        Expression<Func<Client, bool>> where = x => true;
+
+        if (!string.IsNullOrEmpty(gridParamters.Filter))
+            where = x => x.FirstName.Contains(gridParamters.Filter) || x.LastName.Contains(gridParamters.Filter) ||
+            x.Email.Contains(gridParamters.Filter) || (string.IsNullOrEmpty(x.PhoneNumber) ? true : x.PhoneNumber.Contains(gridParamters.Filter));
+
+        var (total, res) = await _repository.GetAllByCondition(where, gridParamters);
+        return _commonService.ResultList<Client>(total, res, gridParamters);
     }
 
     public async Task<Client?> GetByIdAsync(int Id)
@@ -19,27 +27,25 @@ public class ClientsService(IRepository<Client> _repository, IMapper _mapper) : 
         return await _repository.GetByIdAsync(Id);
     }
 
-    public async Task<int> CreateAsync(ClientDTO clientDTO)
+    public async Task<SaveAction> CreateAsync(ClientDTO clientDTO)
     {
+        throw new Exception("test");
         Client client = _mapper.Map<Client>(clientDTO);
         await _repository.InsertAsync(client);
-        return client.Id;
+        return _commonService.Success();
     }
 
-    public async Task<int> UpdateAsync(ClientDTO clientDTO)
+    public async Task<SaveAction> UpdateAsync(ClientDTO clientDTO)
     {
         Client client = _mapper.Map<Client>(clientDTO);
         await _repository.UpdateAsync(client);
-        return client.Id;
+        return _commonService.Success();
     }
 
-    public async Task<bool> DeleteAsync(int id)
+    public async Task<SaveAction> DeleteAsync(int id)
     {
-        return await _repository.DeleteAsync(id) > 0;
-    }
+        await _repository.DeleteAsync(id);
+        return _commonService.Success();
 
-    public Task<IEnumerable<Client>> GetAllAsync(GridParamters gridParamters)
-    {
-        throw new NotImplementedException();
     }
 }

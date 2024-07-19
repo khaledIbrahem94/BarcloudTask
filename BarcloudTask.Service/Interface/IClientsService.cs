@@ -6,10 +6,10 @@ namespace BarcloudTask.Service.Interface;
 
 public interface IClientsService
 {
-    Task<IEnumerable<Client>> GetAllAsync(GridParamters gridParamters);
+    Task<ResultListDTO<Client>> GetAllAsync(GridParamters gridParamters);
     Task<Client?> GetByIdAsync(int Id);
-    Task<int> CreateAsync(ClientDTO clientDTO);
-    Task<int> UpdateAsync(ClientDTO clientDTO);
-    Task<bool> DeleteAsync(int id);
+    Task<SaveAction> CreateAsync(ClientDTO clientDTO);
+    Task<SaveAction> UpdateAsync(ClientDTO clientDTO);
+    Task<SaveAction> DeleteAsync(int id);
 
 }

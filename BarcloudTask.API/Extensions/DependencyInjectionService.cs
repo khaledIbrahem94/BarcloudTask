@@ -12,14 +12,14 @@ namespace BarcloudTask.API.Extensions
             builder.Services.AddSingleton<ICommonService, CommonService>();
 
             builder.Services.AddScoped<IClientsService, ClientsService>();
+            builder.Services.AddScoped<IPolygonService, PolygonService>();
 
 
             string apiKey = configuration["PolygonSettings:ApiKey"] ?? "";
             builder.Services.AddHttpClient<IPolygonService, PolygonService>(client =>
             {
-                client.BaseAddress = new Uri("https://api.polygon.io/v2");
+                client.BaseAddress = new Uri("https://api.polygon.io");
                 client.DefaultRequestHeaders.Accept.Clear();
-                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
             });
 
