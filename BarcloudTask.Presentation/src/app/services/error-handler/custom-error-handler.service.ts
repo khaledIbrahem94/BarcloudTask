@@ -12,8 +12,13 @@ export class CustomErrorHandlerService implements ErrorHandler {
   ) {}
 
   handleError(error: any): void {
+    let errorStr = undefined;
+
+    if (typeof error.error === 'string') {
+      errorStr = error.error;
+    }
     const errorMsg =
-      error.error ?? 'An unexpected error occurred. Please try again later.';
+      errorStr ?? 'An unexpected error occurred. Please try again later.';
     this.notification.showError(errorMsg);
 
     this.emitError.emitError.next(errorMsg);

@@ -81,29 +81,32 @@
 
 @if (formGroup){
 <kendo-dialog
-  [width]="'90vw'"
-  [height]="'90vh'"
+  [width]="'100vw'"
+  [height]="'100vh'"
   title="{{ isNew ? 'Add New Client' : 'Edit Client' }}"
   (close)="closeModal()"
 >
   <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
-    <div class="form-group">
-      <label for="firstName">First Name</label>
-      <input kendoTextBox formControlName="firstName" />
+    <div>
+      <div class="form-group">
+        <label for="firstName">First Name</label>
+        <input kendoTextBox formControlName="firstName" />
+      </div>
+      <div class="form-group">
+        <label for="lastName">Last Name</label>
+        <input kendoTextBox formControlName="lastName" />
+      </div>
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input kendoTextBox formControlName="email" />
+      </div>
+      <div class="form-group">
+        <label for="phoneNumber">Phone Number</label>
+        <input kendoTextBox formControlName="phoneNumber" />
+      </div>
     </div>
-    <div class="form-group">
-      <label for="lastName">Last Name</label>
-      <input kendoTextBox formControlName="lastName" />
-    </div>
-    <div class="form-group">
-      <label for="email">Email</label>
-      <input kendoTextBox formControlName="email" />
-    </div>
-    <div class="form-group">
-      <label for="phoneNumber">Phone Number</label>
-      <input kendoTextBox formControlName="phoneNumber" />
-    </div>
-    <div class="k-dialog-buttongroup">
+
+    <div class="k-dialog-buttongroup k-edit-buttongroup">
       <button
         kendoButton
         type="submit"
