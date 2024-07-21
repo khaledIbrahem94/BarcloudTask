@@ -6,7 +6,7 @@ namespace BarcloudTask.Service.Interface;
 
 public interface IClientsService
 {
-    Task<ResultListDTO<Client>> GetAllAsync(GridParamters gridParamters);
+    Task<ResultListDTO<Client>> GetAllAsync(GridRequestParamters gridParamters);
     Task<Client?> GetByIdAsync(int Id);
     Task<SaveAction> CreateAsync(ClientDTO clientDTO);
     Task<SaveAction> UpdateAsync(ClientDTO clientDTO);

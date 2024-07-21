@@ -1,0 +1,155 @@
+<div class="search-form k-form k-form-horizontal">
+  <div class="k-form-field k-search-field">
+    <input
+      kendoTextBox
+      placeholder="Search..."
+      #searchTerm
+      class="search-input"
+      (keyup.enter)="onSearch(searchTerm.value)"
+    />
+  </div>
+  @if (searchTerm.value){
+  <span
+    class="k-icon k-font-icon k-i-close-circle k-i-x-circle k-align-items-stretch"
+    (click)="searchTerm.value = ''; onSearch('')"
+  ></span>
+  }
+  <div class="k-form-field">
+    <button kendoButton (click)="onSearch(searchTerm.value)" icon="search">
+      Search
+    </button>
+  </div>
+</div>
+
+<div class="create-form k-form k-form-horizontal">
+  <div class="k-form-field">
+    <button
+      kendoButton
+      (click)="openCreateModal()"
+      icon="plus"
+      themeColor="primary"
+    >
+      Add New Client
+    </button>
+  </div>
+</div>
+
+<kendo-grid
+  [data]="gridData"
+  kendoGridSelectBy="id"
+  [pageSize]="gridRequestParams.take"
+  [skip]="gridRequestParams.skip"
+  [sortable]="true"
+  [sort]="sort"
+  [pageable]="{
+    buttonCount: 5,
+    info: true,
+    type: 'input',
+    pageSizes: [5, 10, 30, 50, 100],
+    previousNext: true
+  }"
+  [loading]="loading"
+  (dataStateChange)="dataStateChange($event)"
+>
+  <kendo-grid-column
+    field="firstName"
+    title="First Name"
+    [width]="150"
+  ></kendo-grid-column>
+  <kendo-grid-column
+    field="lastName"
+    title="Last Name"
+    [width]="150"
+  ></kendo-grid-column>
+  <kendo-grid-column
+    field="email"
+    title="Email"
+    [width]="250"
+  ></kendo-grid-column>
+  <kendo-grid-column
+    field="phoneNumber"
+    title="Phone Number"
+    [width]="150"
+  ></kendo-grid-column>
+  <kendo-grid-command-column title="Actions" [width]="150">
+    <ng-template kendoGridCellTemplate let-client>
+      <button kendoButton (click)="editHandler(client)">Edit</button>
+      <button kendoButton (click)="removeHandler(client)">Delete</button>
+    </ng-template>
+  </kendo-grid-command-column>
+</kendo-grid>
+
+@if (formGroup){
+<kendo-dialog
+  [width]="'90vw'"
+  [height]="'90vh'"
+  title="{{ isNew ? 'Add New Client' : 'Edit Client' }}"
+  (close)="closeModal()"
+>
+  <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+    <div class="form-group">
+      <label for="firstName">First Name</label>
+      <input kendoTextBox formControlName="firstName" />
+    </div>
+    <div class="form-group">
+      <label for="lastName">Last Name</label>
+      <input kendoTextBox formControlName="lastName" />
+    </div>
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input kendoTextBox formControlName="email" />
+    </div>
+    <div class="form-group">
+      <label for="phoneNumber">Phone Number</label>
+      <input kendoTextBox formControlName="phoneNumber" />
+    </div>
+    <div class="k-dialog-buttongroup">
+      <button
+        kendoButton
+        type="submit"
+        themeColor="success"
+        [disabled]="btnLoading"
+      >
+        @if (btnLoading){
+        <div class="loader"></div>
+        }@else{
+        <span>{{ isNew ? "Create" : "Update" }}</span>
+        }
+      </button>
+      <button kendoButton type="button" (click)="closeModal()" class="cancel">
+        Cancel
+      </button>
+    </div>
+  </form>
+</kendo-dialog>
+
+} @if (deleteClient){
+<kendo-dialog
+  title="Confirm Delete"
+  (close)="closeDeleteDialog()"
+  [width]="'50vw'"
+>
+  <div>
+    <p>Are you sure you want to delete this client ?</p>
+    <p class="k-font-bold">
+      {{ deleteClient.firstName }} {{ deleteClient.lastName }}
+    </p>
+  </div>
+
+  <div class="k-dialog-buttongroup">
+    <button
+      kendoButton
+      themeColor="error"
+      (click)="confirmDeleteClient()"
+      [disabled]="btnLoading"
+    >
+      @if (btnLoading){
+      <div class="loader"></div>
+      }@else{
+      <span>Yes</span>
+      }
+    </button>
+    <button kendoButton (click)="closeDeleteDialog()" class="cancel">No</button>
+  </div>
+</kendo-dialog>
+}

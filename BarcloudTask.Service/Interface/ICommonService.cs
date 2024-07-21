@@ -7,6 +7,6 @@ public interface ICommonService
 {
     SaveAction Success(string Msg = "Done");
     SaveAction Fail(string Msg = "Fail");
-    ResultListDTO<T> ResultList<T>(int Total, IQueryable<T> List, GridParamters GridParamters);
+    ResultListDTO<T> ResultList<T>(int Total, IQueryable<T> List, GridRequestParamters GridParamters);
     Task AddError(ErrorsLog error);
 }

@@ -44,16 +44,17 @@ namespace BarcloudTask.API
 
             app.MapControllers();
 
-            HangFireService.UseHangFire(app.Services);
             if (app.Environment.IsDevelopment())
             {
                 app.UseUISwagger();
             }
+
             using (var scope = app.Services.CreateScope())
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<DBContext>();
                 dbContext.Database.Migrate();
             }
+            HangFireService.UseHangFire(app.Services);
 
             app.Run();
         }

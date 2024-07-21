@@ -10,6 +10,7 @@ namespace BarcloudTask.API.Extensions
         {
             builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
             builder.Services.AddSingleton<ICommonService, CommonService>();
+            builder.Services.AddSingleton<IEmailSender, EmailSender>();
 
             builder.Services.AddScoped<IClientsService, ClientsService>();
             builder.Services.AddScoped<IPolygonService, PolygonService>();

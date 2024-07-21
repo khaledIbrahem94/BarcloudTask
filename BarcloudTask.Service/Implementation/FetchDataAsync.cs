@@ -50,7 +50,7 @@ public class FetchDataAsync
 
         }
     }
-    async Task SendEmail(List<StockData> data, List<string> emails)
+    public async Task SendEmail(List<StockData> data, List<string> emails)
     {
         using (var scope = _serviceProvider.CreateScope())
         {
@@ -62,15 +62,15 @@ public class FetchDataAsync
             foreach (var tickerData in data)
             {
                 html.AppendLine($"<h2>{tickerData.Ticker}</h2>");
-                html.AppendLine("<table>");
+                html.AppendLine("<table style=\"border-collapse: collapse; width: 100%;\">");
                 html.AppendLine("<thead>");
                 html.AppendLine("<tr>");
-                html.AppendLine("<th>Timestamp</th>");
-                html.AppendLine("<th>Open</th>");
-                html.AppendLine("<th>High</th>");
-                html.AppendLine("<th>Low</th>");
-                html.AppendLine("<th>Close</th>");
-                html.AppendLine("<th>Volume</th>");
+                html.AppendLine("<th style=\"border: 1px solid black; padding: 8px;\">Timestamp</th>");
+                html.AppendLine("<th style=\"border: 1px solid black; padding: 8px;\">Open</th>");
+                html.AppendLine("<th style=\"border: 1px solid black; padding: 8px;\">High</th>");
+                html.AppendLine("<th style=\"border: 1px solid black; padding: 8px;\">Low</th>");
+                html.AppendLine("<th style=\"border: 1px solid black; padding: 8px;\">Close</th>");
+                html.AppendLine("<th style=\"border: 1px solid black; padding: 8px;\">Volume</th>");
                 html.AppendLine("</tr>");
                 html.AppendLine("</thead>");
                 html.AppendLine("<tbody>");
@@ -78,12 +78,12 @@ public class FetchDataAsync
                 foreach (var res in tickerData.Results ?? [])
                 {
                     html.AppendLine("<tr>");
-                    html.AppendLine($"<td>{res.Timestamp}</td>");
-                    html.AppendLine($"<td>{res.Open}</td>");
-                    html.AppendLine($"<td>{res.High}</td>");
-                    html.AppendLine($"<td>{res.Low}</td>");
-                    html.AppendLine($"<td>{res.Close}</td>");
-                    html.AppendLine($"<td>{res.Volume}</td>");
+                    html.AppendLine($"<td style=\"border: 1px solid black; padding: 8px;\">{res.Timestamp}</td>");
+                    html.AppendLine($"<td style=\"border: 1px solid black; padding: 8px;\">{res.Open}</td>");
+                    html.AppendLine($"<td style=\"border: 1px solid black; padding: 8px;\">{res.High}</td>");
+                    html.AppendLine($"<td style=\"border: 1px solid black; padding: 8px;\">{res.Low}</td>");
+                    html.AppendLine($"<td style=\"border: 1px solid black; padding: 8px;\">{res.Close}</td>");
+                    html.AppendLine($"<td style=\"border: 1px solid black; padding: 8px;\">{res.Volume}</td>");
                     html.AppendLine("</tr>");
                 }
 
@@ -91,7 +91,7 @@ public class FetchDataAsync
                 html.AppendLine("</table>");
             }
 
-            await email.SendEmailWithCCAsync(new() { configuration["ReviewerEmail:Emails"] ?? "" }, "Polygon Symbols Results", html.ToString(), [], emails, []);
+            await email.SendEmailWithCCAsync(new() { configuration["Emails:ReviewerEmail"] ?? "" }, "Polygon Symbols Results", html.ToString(), [], emails, []);
         }
 
     }

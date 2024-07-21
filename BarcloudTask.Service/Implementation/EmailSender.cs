@@ -1,28 +1,17 @@
-﻿using BarcloudTask.DataBase;
-using BarcloudTask.Service.Interface;
+﻿using BarcloudTask.Service.Interface;
 using MimeKit;
 using NETCore.MailKit;
 
 namespace BarcloudTask.Service.Implementation;
 
-public class EmailSender : IEmailSender
+public class EmailSender(IMailKitProvider _mailKitProvider, ICommonService _commonService) : IEmailSender
 {
-    private IMailKitProvider _mailKitProvider;
-    private DBContext _dbContext;
-    public EmailSender(IMailKitProvider mailKitProvider, DBContext dbContext)
-    {
-        _mailKitProvider = mailKitProvider;
-        _dbContext = dbContext;
-    }
-
     public async Task<bool> SendEmailWithCCAsync(List<string> emails, string subject, string htmlMessage, List<string> cC, List<string> bCC, List<string> attachment)
     {
         try
         {
 
-            string fullPathHtml = "../EmailTemplate/EmailTemplate.html";
-
-            await _dbContext.SaveChangesAsync();
+            string fullPathHtml = "EmailTemplate/EmailTemplate.html";
 
             string emailHtmlBody = File.ReadAllText(fullPathHtml).Replace("%MESSAGE_CONTENT%", htmlMessage);
             //Log Email
@@ -53,9 +42,9 @@ public class EmailSender : IEmailSender
             await SendAsync(mimeMessage);
             return true;
         }
-        catch (Exception)
+        catch (Exception e)
         {
-            //Log Error
+            await _commonService.AddError(new DataBase.Models.ErrorsLog { Function = "Email Sender", Message = e.Message }).ConfigureAwait(false);
             return false;
         }
     }

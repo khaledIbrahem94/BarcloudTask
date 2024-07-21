@@ -15,7 +15,7 @@ public class DefaultExceptionHandler(ILogger<DefaultExceptionHandler> _logger, I
             Function = "ErrorHandler",
             Message = exception.ToString(),
         }).ConfigureAwait(false);
-        await httpContext.Response.WriteAsJsonAsync(exception, cancellationToken);
+        await httpContext.Response.WriteAsJsonAsync(exception.Message, cancellationToken);
 
         return true;
     }

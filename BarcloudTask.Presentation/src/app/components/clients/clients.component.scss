@@ -1,0 +1,63 @@
+/* HTML: <div class="loader"></div> */
+.loader {
+  width: 35px;
+  aspect-ratio: 1;
+  --_g: no-repeat radial-gradient(circle closest-side, #000 90%, #0000);
+  background: var(--_g) 0 0, var(--_g) 0 100%, var(--_g) 100% 100%;
+  background-size: 40% 40%;
+  animation: l11 1s infinite linear;
+}
+@keyframes l11 {
+  25% {
+    background-position: 100% 0, 0 100%, 100% 100%;
+  }
+  50% {
+    background-position: 100% 0, 0 0, 100% 100%;
+  }
+  75% {
+    background-position: 100% 0, 0 0, 0 100%;
+  }
+  100% {
+    background-position: 100% 100%, 0 0, 0 100%;
+  }
+}
+.k-form-horizontal {
+  width: 100%;
+}
+.search-form {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #f4f5f7;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.create-form {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  background-color: #f4f5f7;
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  justify-content: flex-end;
+}
+
+.search-input {
+  width: 100%;
+}
+
+.k-form-field {
+  margin: 0 10px;
+}
+.k-search-field {
+  width: 50%;
+}
+.k-dialog-buttongroup {
+  .cancel {
+    right: 20px;
+    position: absolute;
+  }
+}

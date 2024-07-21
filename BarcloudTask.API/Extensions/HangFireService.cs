@@ -19,7 +19,7 @@ public static class HangFireService
 
         var recurringJobManager = serviceProvider.GetRequiredService<IRecurringJobManager>();
         var job = new FetchDataAsync(serviceProvider);
-        recurringJobManager.AddOrUpdate("FetchPolygonData", () => job.FetchData(), "*/1 * * * *");
-        // Every 6 hours "0 */6 * * *"
+        recurringJobManager.AddOrUpdate("FetchPolygonData", () => job.FetchData(), "0 */6 * * *");
+        // Every 1 min for test  "*/1 * * * *"
     }
 }

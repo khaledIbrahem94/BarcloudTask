@@ -12,7 +12,7 @@ namespace BarcloudTask.API.Controllers
     {
 
         [HttpGet]
-        public async Task<ActionResult<ResultListDTO<Client>>> GetAllAsync([FromQuery] GridParamters gridParamters)
+        public async Task<ActionResult<ResultListDTO<Client>>> GetAll([FromQuery] GridRequestParamters gridParamters)
         {
             var items = await _clients.GetAllAsync(gridParamters);
             return Ok(items);
@@ -28,22 +28,22 @@ namespace BarcloudTask.API.Controllers
         [HttpPost]
         public async Task<ActionResult<SaveAction>> Create(ClientDTO client)
         {
-            var id = await _clients.CreateAsync(client);
-            return Created(nameof(GetAllAsync), new { id });
+            var saved = await _clients.CreateAsync(client);
+            return Ok(saved);
         }
 
         [HttpPut]
         public async Task<ActionResult<SaveAction>> Update(ClientDTO entity)
         {
-            await _clients.UpdateAsync(entity);
-            return CreatedAtAction(nameof(GetAllAsync), new { entity.Id }, entity);
+            var saved = await _clients.UpdateAsync(entity);
+            return Ok(saved);
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult<SaveAction>> Delete(int id)
         {
-            await _clients.DeleteAsync(id);
-            return Ok();
+            var saved = await _clients.DeleteAsync(id);
+            return Ok(saved);
         }
     }
 }

@@ -16,18 +16,13 @@ public class CommonService(IServiceProvider _serviceProvider) : ICommonService
         };
     }
 
-    public ResultListDTO<T> ResultList<T>(int Total, IQueryable<T> List, GridParamters GridParamters)
+    public ResultListDTO<T> ResultList<T>(int Total, IQueryable<T> List, GridRequestParamters GridParamters)
     {
         return new ResultListDTO<T>
         {
 
-            List = List,
-            ResultPaging = new GridResult
-            {
-                PageRows = List.Count(),
-                TotalRows = Total,
-                NumberOfPages = Total / GridParamters.RowsNumber,
-            }
+            Data = List,
+            Total = Total,
         };
     }
 
@@ -43,6 +38,7 @@ public class CommonService(IServiceProvider _serviceProvider) : ICommonService
     {
         using (var scope = _serviceProvider.CreateScope())
         {
+            error.Date = DateTime.UtcNow;
             var repoErrorLog = scope.ServiceProvider.GetRequiredService<IRepository<ErrorsLog>>();
             await repoErrorLog.InsertAsync(error);
         }

@@ -10,7 +10,7 @@ namespace BarcloudTask.Service.Implementation;
 public class ClientsService(IRepository<Client> _repository, ICommonService _commonService, IMapper _mapper) : IClientsService
 {
 
-    public async Task<ResultListDTO<Client>> GetAllAsync(GridParamters gridParamters)
+    public async Task<ResultListDTO<Client>> GetAllAsync(GridRequestParamters gridParamters)
     {
         Expression<Func<Client, bool>> where = x => true;
 
@@ -29,23 +29,32 @@ public class ClientsService(IRepository<Client> _repository, ICommonService _com
 
     public async Task<SaveAction> CreateAsync(ClientDTO clientDTO)
     {
-        throw new Exception("test");
+        await EmailExists(clientDTO.Email);
         Client client = _mapper.Map<Client>(clientDTO);
         await _repository.InsertAsync(client);
-        return _commonService.Success();
+        return _commonService.Success("Inserted");
     }
 
     public async Task<SaveAction> UpdateAsync(ClientDTO clientDTO)
     {
+        await EmailExists(clientDTO.Email);
         Client client = _mapper.Map<Client>(clientDTO);
         await _repository.UpdateAsync(client);
-        return _commonService.Success();
+        return _commonService.Success("Deleted");
     }
 
     public async Task<SaveAction> DeleteAsync(int id)
     {
         await _repository.DeleteAsync(id);
-        return _commonService.Success();
+        return _commonService.Success("Deleted");
 
+    }
+
+    async Task EmailExists(string email)
+    {
+        if ((await _repository.GetFirstByCondition(x => x.Email.Trim() == email.Trim())) != null)
+        {
+            throw new Exception("Email already exists");
+        }
     }
 }

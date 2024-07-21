@@ -23,17 +23,17 @@ public class Repository<T> : IRepository<T> where T : class
         return await _dbSet.ToListAsync();
     }
 
-    public async Task<(int Total, IQueryable<T> EntityList)> GetAllByCondition(Expression<Func<T, bool>> expression, GridParamters gridParamters, params Expression<Func<T, object>>[] includesPara)
+    public async Task<(int Total, IQueryable<T> EntityList)> GetAllByCondition(Expression<Func<T, bool>> expression, GridRequestParamters gridParamters, params Expression<Func<T, object>>[] includesPara)
     {
         IQueryable<T> query = _context.Set<T>().AsNoTracking();
-        int countForSkip = (gridParamters.PageIndex) * gridParamters.RowsNumber;
+        int countForSkip = gridParamters.Skip;
         Task<int> Total = query.Where(expression).CountAsync();
 
         string OrderStr = $"{gridParamters.OrderBy} {gridParamters.OrderEnum.ToString().ToLower()}";
 
         IQueryable<T> res = expression == null ? query.OrderBy(OrderStr)
-  .Skip(countForSkip).Take(gridParamters.RowsNumber).AsNoTracking() : query.OrderBy(OrderStr)
-  .Where(expression).Skip(countForSkip).Take(gridParamters.RowsNumber).AsNoTracking();
+  .Skip(countForSkip).Take(gridParamters.Take).AsNoTracking() : query.OrderBy(OrderStr)
+  .Where(expression).Skip(countForSkip).Take(gridParamters.Take).AsNoTracking();
 
 
         if (includesPara != null)
@@ -43,6 +43,15 @@ public class Repository<T> : IRepository<T> where T : class
         }
 
         return (await Total, res);
+    }
+
+    public async Task<T?> GetFirstByCondition(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] includesPara)
+    {
+        var query = _context.Set<T>().AsNoTracking();
+
+        T? res = await query.FirstOrDefaultAsync(expression);
+
+        return res;
     }
 
     public async Task<T?> GetByIdAsync(object id)
